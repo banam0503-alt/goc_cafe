@@ -34,7 +34,7 @@ $current_url = $_GET['url'] ?? '';
                 <li class="nav-item">
                     <a class="nav-link <?= ($current_url=='admin/revenue')?'active':'' ?>" href="?url=admin/revenue">Doanh thu</a>
                 </li>
-            </ul>I'm going to. 
+            </ul>
 
             <div class="d-flex align-items-center">
                 <span class="text-white me-3">

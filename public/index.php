@@ -34,6 +34,12 @@ switch ($url) {
     (new CartController)->count();
     break;
 
+    case 'cart':
+        requireLogin();
+        (new CartController)->index();
+        break;
+
+
     /* AUTH — KHÔNG ĐƯỢC CHẶN */
     case 'login':
         (new AuthController)->login();
@@ -57,15 +63,6 @@ switch ($url) {
     (new PageController)->gioithieu();
     break;
 
-    case 'cart':
-        requireLogin();
-        (new CartController)->index();
-        break;
-
-    case 'cart/add':
-        requireLogin();
-        (new CartController)->add();
-        break;
 
     /* STAFF */
     case 'staff':

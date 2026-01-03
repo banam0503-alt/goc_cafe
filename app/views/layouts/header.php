@@ -76,20 +76,17 @@ if ($user && $role === 'USER') {
                     Admin Panel
                 </a>
             <?php endif; ?>
-              <?php if ($user): ?>
-                <div class="user-dropdown">
-                    <span class="user-name-display"><?= htmlspecialchars($user['name']) ?> ▾</span>
-                    <div class="dropdown-menu">
-                        <a href="/GocCaPhe/public/index.php?url=profile">Tài khoản</a>
-                        <a href="/GocCaPhe/public/index.php?url=logout">Đăng xuất</a>
-                    </div>
-                </div>
-            <?php else: ?>
-                <a href="/GocCaPhe/public/index.php?url=login">Đăng nhập</a>
-                <a href="/GocCaPhe/public/index.php?url=register" class="btn-register">
-                    Đăng ký
-                </a>
-            <?php endif; ?>
+
+            <?php if ($user): ?> 
+                <div class="user-dropdown"> 
+                    <span class="user-name-display"><?= htmlspecialchars($user['name']) ?> ▾</span> 
+                    <div class="user-menu"> 
+                       <a href="/GocCaPhe/public/index.php?url=profile">Tài khoản</a>
+                    <a href="/GocCaPhe/public/index.php?url=logout">Đăng xuất</a> 
+                </div> </div> <?php else: ?> 
+                    <a href="/GocCaPhe/public/index.php?url=login">Đăng nhập</a> 
+                    <a href="/GocCaPhe/public/index.php?url=register" class="btn-register"> Đăng ký </a> 
+                <?php endif; ?>
 
         </div>
 
@@ -100,8 +97,6 @@ if ($user && $role === 'USER') {
     <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Optional JS (cho modal, dropdown, tooltip)
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
 <script>
