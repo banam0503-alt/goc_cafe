@@ -48,8 +48,8 @@ if ($user && $role === 'USER') {
             <a href="/GocCaPhe/public/index.php?url=menu" 
                class="<?= ($current_url == 'menu') ? 'active' : '' ?>">Sản phẩm</a>
             
-            <a href="/GocCaPhe/public/index.php?url=booking" 
-               class="<?= ($current_url == 'booking') ? 'active' : '' ?>">Đặt bàn</a>
+            <a href="/GocCaPhe/public/index.php?url=datban" 
+               class="<?= ($current_url == 'datban') ? 'active' : '' ?>">Đặt bàn</a>
             
             <a  href="/GocCaPhe/public/index.php?url=gioithieu" 
                class="<?= ($current_url == 'gioithieu') ? 'active' : '' ?>"> Giới thiệu </a>

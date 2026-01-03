@@ -1,0 +1,15 @@
+{
+    "name": "admin/goc-ca-phe",
+    "autoload": {
+        "psr-4": {
+            "Admin\\GocCaPhe\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "kimmttrung",
+            "email": "160985982+kimmttrung@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
