@@ -15,6 +15,7 @@ $current_url = $_GET['url'] ?? 'index';
     <link rel="stylesheet" href="/GocCaPhe/public/assets/css/trangchu.css">
     <link rel="stylesheet" href="/GocCaPhe/public/assets/css/footer.css">
     <link rel="stylesheet" href="/GocCaPhe/public/assets/css/style.css">
+    <link rel="stylesheet" href="/GocCaPhe/public/assets/css/introduce.css">
 </head>
 <body>
 
@@ -40,8 +41,8 @@ $current_url = $_GET['url'] ?? 'index';
             <a href="/GocCaPhe/public/index.php?url=booking" 
                class="<?= ($current_url == 'booking') ? 'active' : '' ?>">Đặt bàn</a>
             
-            <a href="/GocCaPhe/public/index.php?url=about" 
-               class="<?= ($current_url == 'about') ? 'active' : '' ?>">Giới thiệu</a>
+            <a  href="/GocCaPhe/public/index.php?url=gioithieu" 
+               class="<?= ($current_url == 'gioithieu') ? 'active' : '' ?>"> Giới thiệu </a>
         </nav>
 
         <!-- USER ACTION -->

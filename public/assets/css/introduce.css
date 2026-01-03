@@ -1,0 +1,186 @@
+/* ===============================
+   GIỚI THIỆU QUÁN
+================================ */
+.intro-section {
+    padding: 60px 8%;
+    background: #f8f6f3;
+}
+
+.intro-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.intro-text {
+    flex: 1;
+}
+
+.intro-text h2 {
+    font-size: 32px;
+    color: #4b2e1f;
+    margin-bottom: 20px;
+}
+
+.intro-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.intro-image {
+    flex: 1;
+    text-align: center;
+}
+
+.intro-image img {
+    max-width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* ===============================
+   DỊCH VỤ
+================================ */
+.service-section {
+    padding: 60px 8%;
+    background: #ffffff;
+    text-align: center;
+}
+
+.service-section h2 {
+    font-size: 30px;
+    color: #4b2e1f;
+    margin-bottom: 40px;
+}
+
+.service-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.service-box {
+    background: #f8f6f3;
+    padding: 30px 20px;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+.service-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.service-box img {
+    width: 60px;
+    margin: 0 auto 15px;
+    display: block;
+}
+
+
+.service-box h3 {
+    font-size: 18px;
+    color: #4b2e1f;
+    margin-bottom: 10px;
+}
+
+.service-box p {
+    font-size: 15px;
+    color: #666;
+}
+
+/* ===============================
+   THÀNH TỰU
+================================ */
+.achievement-section {
+    padding: 60px 8%;
+    background: #4b2e1f;
+    color: white;
+    text-align: center;
+}
+
+.achievement-section h2 {
+    font-size: 30px;
+    margin-bottom: 40px;
+}
+
+.achievement-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.achievement-box {
+    background: rgba(255,255,255,0.12);
+    padding: 25px;
+    border-radius: 14px;
+}
+
+.achievement-box h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #ffd8a8;
+}
+
+.achievement-box p {
+    font-size: 15px;
+}
+
+/* ===============================
+   VIDEO CÀ PHÊ
+================================ */
+.coffee-video {
+    padding: 60px 8%;
+    background: #f8f6f3;
+    text-align: center;
+}
+
+.coffee-video h2 {
+    font-size: 30px;
+    color: #4b2e1f;
+    margin-bottom: 30px;
+}
+
+.coffee-video video {
+    width: 80%;
+    max-width: 800px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* ===============================
+   ROBUSTA
+================================ */
+.coffee-robusta {
+    padding: 60px 8%;
+    background: #ffffff;
+    text-align: center;
+}
+
+.coffee-robusta h2 {
+    font-size: 30px;
+    color: #4b2e1f;
+    margin-bottom: 20px;
+}
+
+.coffee-robusta p {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+}
+
+.coffee-robusta img {
+    display: block;
+    margin: 0 auto;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+}
+

@@ -38,6 +38,10 @@ switch ($url) {
         requireLogin();
         (new ProductController)->list();
         break;
+    
+    case 'gioithieu':
+    (new PageController)->gioithieu();
+    break;
 
     /* STAFF */
     case 'staff':
@@ -186,4 +190,6 @@ case 'register-handle':
     default:
         http_response_code(404);
         echo "404 - Không tìm thấy trang";
+
+    
 }
