@@ -267,10 +267,10 @@ switch ($url) {
         (new UserController)->updateProfile();
         break;
 
-    case 'profile/update-password':
-        requireLogin();
-        (new UserController)->updatePassword();
-        break;
+    // case 'profile/update-password':
+    //     requireLogin();
+    //     (new UserController)->updatePassword();
+    //     break;
 
     /* ORDER APPROVAL - ADMIN + STAFF */
 
