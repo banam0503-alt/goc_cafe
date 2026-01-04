@@ -1,23 +1,17 @@
 {
-    "name": "admin/goc-ca-phe",
-    "autoload": {
-        "psr-4": {
-            "Admin\\GocCaPhe\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "kimmttrung",
-            "email": "160985982+kimmttrung@users.noreply.github.com"
-        }
-    ],
-    "require": {
-        "phpoffice/phpspreadsheet": "1.29.0",
-        "maennchen/zipstream-php": "2.1.0"
-    },
-    "config": {
-        "audit": {
-            "block-insecure": false
-        }
+  "name": "tacstore/goc-ca-phe",
+  "autoload": {
+    "psr-4": {
+      "Tacstore\\GocCaPhe\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "tai",
+      "email": "tai104402@st.vimaru.edu.vn"
+    }
+  ],
+  "require": {
+    "maennchen/zipstream-php": "2.1.0"
+  }
 }
