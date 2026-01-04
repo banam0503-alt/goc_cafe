@@ -15,20 +15,23 @@ class AdminReservationController {
 
     public function approve() {
         $id = $_GET['id'] ?? null;
-        if ($id) {
-            Reservation::approve($id);
+        // Lấy ID nhân viên từ session
+        $staffId = $_SESSION['user']['id'] ?? null; 
+
+        if ($id && $staffId) {
+            Reservation::approve($id, $staffId);
         }
-        // SỬA TẠI ĐÂY: Chuyển hướng về đúng case trong Router index.php
         header("Location: index.php?url=admin/reservations");
         exit;
     }
 
     public function cancel() {
         $id = $_GET['id'] ?? null;
-        if ($id) {
-            Reservation::cancel($id);
+        $staffId = $_SESSION['user']['id'] ?? null;
+
+        if ($id && $staffId) {
+            Reservation::cancel($id, $staffId);
         }
-        // SỬA TẠI ĐÂY: Chuyển hướng về đúng case trong Router index.php
         header("Location: index.php?url=admin/reservations");
         exit;
     }

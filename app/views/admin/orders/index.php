@@ -12,7 +12,7 @@
                         <th>Khách hàng</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
-                        <th>Người xử lý</th> <!-- Cột mới -->
+                        <th>Người xử lý</th>
                         <th>Ngày tạo</th>
                         <th width="150">Hành động</th>
                     </tr>
@@ -57,12 +57,24 @@
                         </td>
 
                         <!-- Người xử lý (Hiển thị Tên + Vai trò) -->
+                        <!-- Người xử lý (Hiển thị Tên + Vai trò) -->
                         <td>
                             <?php if(!empty($o['staff_name'])): ?>
                                 <div><i class="fas fa-user-check"></i> <?= htmlspecialchars($o['staff_name']) ?></div>
-                                <span class="badge bg-secondary" style="font-size: 0.7rem;">
+                                
+                                <?php 
+                                    // Logic chọn màu dựa trên Role
+                                    $roleClass = match($o['staff_role']) {
+                                        'ADMIN' => 'bg-success',           // Màu Xanh lá
+                                        'STAFF' => 'bg-warning text-dark', // Màu Vàng (thêm text-dark để chữ đen dễ đọc)
+                                        default => 'bg-secondary'          // Mặc định màu Xám
+                                    };
+                                ?>
+                                
+                                <span class="badge <?= $roleClass ?>" style="font-size: 0.7rem;">
                                     <?= $o['staff_role'] ?>
                                 </span>
+
                                 <div class="small text-muted">
                                     <?= date('H:i d/m', strtotime($o['approved_at'])) ?>
                                 </div>
