@@ -1,12 +1,17 @@
 {
-    "name": "thang/goc-ca-phe",
-    "autoload": {
-        "psr-4": {
-            "Thang\\GocCaPhe\\": "src/"
-        }
-    },
-    "require": {
-        "phpoffice/phpspreadsheet": "1.28.0",
-        "maennchen/zipstream-php": "2.1.0"
+  "name": "tacstore/goc-ca-phe",
+  "autoload": {
+    "psr-4": {
+      "Tacstore\\GocCaPhe\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "tai",
+      "email": "tai104402@st.vimaru.edu.vn"
+    }
+  ],
+  "require": {
+    "maennchen/zipstream-php": "2.1.0"
+  }
 }
