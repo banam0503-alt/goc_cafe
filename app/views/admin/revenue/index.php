@@ -9,7 +9,7 @@
         <!-- CỘT TRÁI: SỐ LIỆU -->
         <div class="col-md-8">
             
-            <!-- 1. BÁO CÁO NGÀY (FORM SỬA LỖI TẠI ĐÂY) -->
+            <!-- 1. BÁO CÁO NGÀY -->
             <div class="card shadow mb-4">
                 <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                     <h5 class="m-0">
@@ -17,18 +17,12 @@
                         Ngày: <?= date('d/m/Y', strtotime($filterDate)) ?>
                     </h5>
                     
-                    <!-- QUAN TRỌNG: Action để trống hoặc trỏ về index.php -->
                     <form class="d-flex" action="index.php" method="GET">
-                        <!-- 1. Bắt buộc phải có dòng này để giữ đường dẫn admin/revenues -->
                         <input type="hidden" name="url" value="admin/revenues">
-                        
-                        <!-- 2. Giữ lại tháng/năm hiện tại để không làm hỏng biểu đồ bên dưới -->
                         <input type="hidden" name="month" value="<?= $filterMonth ?>">
                         <input type="hidden" name="year" value="<?= $filterYear ?>">
                         
-                        <!-- 3. Value phải in ra biến $filterDate để sau khi reload nó vẫn hiện ngày đã chọn -->
                         <input type="date" name="date" class="form-control form-control-sm me-2" value="<?= $filterDate ?>" onchange="this.form.submit()">
-                        
                         <button type="submit" class="btn btn-light btn-sm fw-bold">Xem</button>
                     </form>
                 </div>
@@ -54,20 +48,12 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="p-2 border rounded bg-light">
-                                    <small class="text-muted">Doanh thu</small>
+                                    <small class="text-muted">Tổng Doanh thu</small>
                                     <h4 class="fw-bold text-success"><?= number_format($dailyStats['total_revenue']) ?>đ</h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="alert alert-secondary p-2 m-0 text-center">
-                            Lợi nhuận (Doanh thu - Lương NV): 
-                            <strong class="<?= $dailyProfit >= 0 ? 'text-success' : 'text-danger' ?>">
-                                <?= number_format($dailyProfit) ?> đ
-                            </strong>
-                            <div style="font-size: 12px;" class="text-muted mt-1">
-                                (Lương hôm nay: <?= number_format($dailySalary) ?>đ)
-                            </div>
-                        </div>
+                        <!-- Đã xóa phần hiển thị Lợi nhuận và Lương -->
                     <?php endif; ?>
                 </div>
             </div>
@@ -79,7 +65,6 @@
                     
                     <form class="d-flex" action="index.php" method="GET">
                         <input type="hidden" name="url" value="admin/revenues">
-                        <!-- Giữ lại ngày đang chọn ở trên -->
                         <input type="hidden" name="date" value="<?= $filterDate ?>">
                         
                         <select name="month" class="form-select form-select-sm me-2" style="width: 70px;" onchange="this.form.submit()">
@@ -94,23 +79,12 @@
                         <button class="btn btn-light btn-sm fw-bold">Xem</button>
                     </form>
                 </div>
-                <div class="card-body">
-                    <table class="table table-bordered mb-0">
-                        <tr>
-                            <td>Tổng Doanh Thu:</td>
-                            <td class="text-end fw-bold text-success"><?= number_format($monthlyStats['revenue']) ?> đ</td>
-                        </tr>
-                        <tr>
-                            <td>Tổng Lương NV:</td>
-                            <td class="text-end fw-bold text-danger">- <?= number_format($monthlyStats['salary']) ?> đ</td>
-                        </tr>
-                        <tr class="table-active">
-                            <td><strong>Lợi Nhuận Thực:</strong></td>
-                            <td class="text-end fw-bold fs-5 <?= $monthlyProfit >= 0 ? 'text-success' : 'text-danger' ?>">
-                                <?= number_format($monthlyProfit) ?> đ
-                            </td>
-                        </tr>
-                    </table>
+                <div class="card-body text-center">
+                    <!-- Chỉ hiển thị Tổng doanh thu tháng -->
+                    <h6 class="text-muted text-uppercase">Tổng doanh thu tháng <?= $filterMonth ?></h6>
+                    <h1 class="display-4 fw-bold text-success">
+                        <?= number_format($monthlyStats['revenue']) ?> đ
+                    </h1>
                 </div>
             </div>
         </div>
