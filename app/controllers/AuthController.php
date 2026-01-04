@@ -35,12 +35,10 @@ class AuthController {
             exit;
         }
 
-        $_SESSION['user'] = [
-            'id'    => $user['id'],
-            'name'  => $user['name'] ?? '',
-            'email' => $user['email'],
-            'role'  => $user['role']
-        ];
+        // 1. Xóa trường password hash để bảo mật (không lưu mật khẩu vào session)
+        unset($user['password']);
+        
+        $_SESSION['user'] = $user;
 
         switch ($user['role']) {
             case 'ADMIN':

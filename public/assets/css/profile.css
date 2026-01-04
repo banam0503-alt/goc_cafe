@@ -1,137 +1,195 @@
-.profile-container {
-    max-width: 900px;
-    margin: 40px auto;
+/* ================= KHUNG BAO NGOÀI ================= */
+.profile-wrapper {
+    display: flex;
+    /* Quan trọng: Để chia làm 2 cột */
+    gap: 30px;
+    /* Khoảng cách giữa 2 cột */
+    align-items: flex-start;
+    padding-bottom: 50px;
+}
+
+/* ================= CỘT TRÁI (SIDEBAR) ================= */
+.profile-sidebar {
+    width: 300px;
+    /* Chiều rộng cố định */
+    flex-shrink: 0;
     background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    padding: 30px 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    /* Đổ bóng nhẹ */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.profile-header {
-    border-bottom: 1px solid #eee;
+/* --- AVATAR --- */
+.user-brief {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
     padding-bottom: 20px;
-    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
 }
 
-.profile-header h2 { color: #4b2e1f; margin-bottom: 5px; }
-.profile-header p { color: #777; font-size: 14px; }
+.sidebar-avatar-wrapper {
+    position: relative;
+    width: 200px;
+    /* Kích thước khung ảnh */
+    height: 200px;
+}
 
-.profile-body { display: flex; gap: 50px; }
+.sidebar-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Cắt ảnh tròn đẹp không bị méo */
+    border-radius: 50%;
+    border: 4px solid #f0f0f0;
+}
 
-.profile-info { flex: 2; }
-
-.form-group-row {
+.upload-icon-label {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.upload-icon-label:hover {
+    background: #f8f9fa;
+    transform: scale(1.1);
+}
+
+.upload-icon-label i {
+    color: #ff7a00;
+    /* Màu cam */
+    font-size: 20px;
+}
+
+/* --- MENU BÊN TRÁI --- */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 30px;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.sidebar-menu li a i {
+    width: 30px;
+    color: #888;
+}
+
+.sidebar-menu li.active a,
+.sidebar-menu li a:hover {
+    color: #ee4d2d;
+    /* Màu cam Shopee/Lazada style */
+    font-weight: 500;
+}
+
+.sidebar-menu li.active a i {
+    color: #ee4d2d;
+}
+
+/* ================= CỘT PHẢI (MAIN CONTENT) ================= */
+.profile-main {
+    flex: 1;
+    /* Chiếm hết phần còn lại */
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.profile-header p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* --- FORM --- */
+.form-group-row {
+    display: flex;
+    /* Xếp ngang Label và Input */
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 .form-group-row label {
     width: 150px;
+    /* Chiều rộng cố định của nhãn */
     color: #555;
-    font-size: 15px;
+    text-align: right;
+    margin-right: 20px;
+    font-weight: 500;
 }
 
-.form-group-row input, .form-group-row textarea {
+.form-group-row input,
+.form-group-row textarea {
     flex: 1;
-    padding: 10px;
+    /* Input chiếm hết khoảng trống còn lại */
+    padding: 10px 15px;
     border: 1px solid #ddd;
-    border-radius: 6px;
-    outline: none;
-}
-
-.readonly-input { background: #f9f9f9; color: #999; }
-
-.btn-save-profile {
-    margin-left: 150px;
-    background: #4b2e1f;
-    color: #ffd8a8;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.profile-avatar {
-    flex: 1;
-    text-align: center;
-    border-left: 1px solid #eee;
-    padding-left: 50px;
-}
-
-.avatar-wrapper img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 15px;
-    border: 3px solid #f8f6f3;
-}
-
-.btn-upload-img {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 8px 15px;
     border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 15px;
-}
-.profile-wrapper {
-    display: flex;
-    gap: 30px;
-}
-
-.profile-sidebar {
-    width: 250px;
-    padding-top: 20px;
-}
-
-.user-brief {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #efefef;
-}
-
-.user-brief img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.user-brief span {
-    font-weight: bold;
-    color: #4b2e1f;
-}
-
-.sidebar-menu {
-    list-style: none;
-}
-
-.sidebar-menu li {
-    margin-bottom: 15px;
-}
-
-.sidebar-menu li a {
-    text-decoration: none;
-    color: #555;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 15px;
+    outline: none;
     transition: 0.3s;
 }
 
-.sidebar-menu li.active a, .sidebar-menu li a:hover {
-    color: #4b2e1f;
-    font-weight: bold;
+.form-group-row input:focus,
+.form-group-row textarea:focus {
+    border-color: #888;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
-.profile-main {
-    flex: 1;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
+.readonly-input {
+    background-color: #f9f9f9;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* --- BUTTON --- */
+.btn-save-profile {
+    background-color: #ee4d2d;
+    /* Màu chủ đạo */
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(238, 77, 45, 0.3);
+}
+
+.btn-save-profile:hover {
+    background-color: #d73211;
+    transform: translateY(-1px);
 }

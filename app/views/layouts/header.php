@@ -8,7 +8,15 @@ $cartCount = 0;
 if ($user && $role === 'USER') {
     $cartCount = CartController::getCartCount($user['id']);
 }
+
+$avatarPath = '/GocCaPhe/public/assets/images/default-avatar.png'; // Ảnh mặc định
+if ($user && !empty($user['avatar'])) {
+    $avatarPath = '/GocCaPhe/public/' . $user['avatar'];
+}
+
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -76,12 +84,33 @@ if ($user && $role === 'USER') {
                 </a>
             <?php endif; ?>
               <?php if ($user): ?>
+                
                 <div class="user-dropdown">
-                    <span class="user-name-display"><?= htmlspecialchars($user['name']) ?> ▾</span> 
+                  <div style="display:flex; align-items:center; gap:8px;">
+    <span class="user-name-display">
+        <?= htmlspecialchars($user['name']) ?> ▾
+    </span>
+
+    <img 
+        src="<?= $avatarPath ?>" 
+        alt="Avatar"
+        style="
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        "
+    >
+</div>
+
                     <div class="user-menu"> 
                        <a href="/GocCaPhe/public/index.php?url=profile">Tài khoản</a>
                     <a href="/GocCaPhe/public/index.php?url=logout">Đăng xuất</a> 
                 </div>
+            
+
             <?php else: ?>
                 <a href="/GocCaPhe/public/index.php?url=login">Đăng nhập</a>
                 <a href="/GocCaPhe/public/index.php?url=register" class="btn-register">

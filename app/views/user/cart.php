@@ -3,38 +3,33 @@
 <div class="container mt-4">
     <h2>Giỏ hàng của bạn</h2>
 
-    <?php if (empty($items)): ?>
-        <p>Giỏ hàng đang trống</p>
-    <?php else: ?>
-
-        <div class="mb-3">
-    <a href="?url=cart&status=PENDING"
-       class="btn btn-outline-warning <?= ($_GET['status'] ?? 'PENDING')==='PENDING' ? 'active' : '' ?>">
-        Đang mua (PENDING)
-    </a>
-
-    <a href="?url=cart&status=PAID"
-       class="btn btn-outline-info <?= ($_GET['status'] ?? '')==='PAID' ? 'active' : '' ?>">
-        Đã thanh toán (PAID)
-    </a>
-    <a href="?url=cart&status=APPROVED"
-    class="btn btn-outline-success <?= ($_GET['status'] ?? '')==='APPROVED' ? 'active' : '' ?>">
-        Đã duyệt
-    </a>
-
-    <a href="?url=cart&status=CANCELLED"
-        class="btn btn-outline-danger <?= ($_GET['status'] ?? '')==='CANCELLED' ? 'active' : '' ?>">
+    <div class="mb-3">
+        <a href="?url=cart&status=PENDING"
+           class="btn btn-outline-warning <?= ($_GET['status'] ?? 'PENDING') === 'PENDING' ? 'active' : '' ?>">
+            Đang mua (PENDING)
+        </a>
+        <a href="?url=cart&status=PAID"
+           class="btn btn-outline-info <?= ($_GET['status'] ?? '') === 'PAID' ? 'active' : '' ?>">
+            Đã thanh toán (PAID)
+        </a>
+        <a href="?url=cart&status=APPROVED"
+           class="btn btn-outline-success <?= ($_GET['status'] ?? '') === 'APPROVED' ? 'active' : '' ?>">
+            Đã duyệt
+        </a>
+        <a href="?url=cart&status=CANCELLED"
+           class="btn btn-outline-danger <?= ($_GET['status'] ?? '') === 'CANCELLED' ? 'active' : '' ?>">
             Đã hủy
         </a>
-</div>
+    </div>
+
+    <?php if (empty($items)): ?>
+        <div class="alert alert-light border">Giỏ hàng trong mục này đang trống</div>
+    <?php else: ?>
         <form id="cart-form">
-            
             <table class="table table-striped table-bordered align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>
-                            <input type="checkbox" id="select-all">
-                        </th>
+                        <th><input type="checkbox" id="select-all"></th>
                         <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Giá</th>
@@ -45,30 +40,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($items as $item): 
-                        $isPaid = ($item['order_status']=='PENDING');
-                    ?>
-                       <tr data-order-item-id="<?= $item['order_item_id'] ?>">
+                    <?php foreach ($items as $item): ?>
+                        <tr data-order-item-id="<?= $item['order_item_id'] ?>">
                             <td>
-                                <input type="checkbox"
-                                    class="item-checkbox"
-                                    value="<?= $item['order_item_id'] ?>"
-                                    <?= $item['order_status']!=='PENDING' ? 'disabled' : '' ?>
-                                    >
-
+                                <input type="checkbox" class="item-checkbox" value="<?= $item['order_item_id'] ?>" 
+                                <?= $item['order_status'] !== 'PENDING' ? 'disabled' : '' ?>>
                             </td>
                             <td><?= htmlspecialchars($item['name']) ?></td>
                             <td>
                                 <div class="input-group" style="width:120px;">
-                                    <button type="button" class="btn btn-outline-secondary btn-decrease" <?= $item['order_status']!=='PENDING' ? 'disabled' : '' ?>>-</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-decrease" <?= $item['order_status'] !== 'PENDING' ? 'disabled' : '' ?>>-</button>
                                     <input type="text" class="form-control text-center quantity-input" value="<?= $item['quantity'] ?>" readonly>
-                                    <button type="button" class="btn btn-outline-secondary btn-increase" <?= $item['order_status']!=='PENDING' ? 'disabled' : '' ?>>+</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-increase" <?= $item['order_status'] !== 'PENDING' ? 'disabled' : '' ?>>+</button>
                                 </div>
                             </td>
-                            <td class="price"><?= number_format($item['price'],0,',','.') ?>₫</td>
+                            <td class="price"><?= number_format($item['price'], 0, ',', '.') ?>₫</td>
                             <td>
                                 <?php
-                                $badgeClass = match($item['order_status']){
+                                $badgeClass = match ($item['order_status']) {
                                     'PENDING'   => 'bg-warning',
                                     'PAID'      => 'bg-info',
                                     'APPROVED'  => 'bg-success',
@@ -76,14 +65,35 @@
                                     default     => 'bg-secondary'
                                 };
                                 ?>
-                                <span class="badge <?= $badgeClass ?>">
-                                    <?= $item['order_status'] ?>
-                                </span>
+                                <span class="badge <?= $badgeClass ?>"><?= $item['order_status'] ?></span>
                             </td>
-                            <td class="subtotal"><?= number_format($item['price'] * $item['quantity'],0,',','.') ?>₫</td>
+                            <td class="subtotal"><?= number_format($item['price'] * $item['quantity'], 0, ',', '.') ?>₫</td>
                             <td class="text-center">
-                                <?php if(!empty($item['image'])): ?>
-                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#imgModal<?= $item['product_id'] ?>">👁️</button>
+                                <?php if (!empty($item['image'])): ?>
+                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#imgModal<?= $item['order_item_id'] ?>">
+                                        👁️
+                                    </button>
+
+                                    <div class="modal fade" id="imgModal<?= $item['order_item_id'] ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"><?= htmlspecialchars($item['name']) ?></h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-center">
+                                                    <?php 
+                                                        // Đường dẫn chuẩn dựa theo ảnh cấu trúc thư mục của bạn
+                                                        $imagePath = "/GocCaPhe/public/assets/img/" . $item['image']; 
+                                                    ?>
+                                                    <img src="<?= $imagePath ?>" 
+                                                        class="img-fluid rounded" 
+                                                        alt="Sản phẩm"
+                                                        onerror="this.src='/GocCaPhe/public/assets/img/default.jpg';"> 
+                                                        </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php else: ?>
                                     —
                                 <?php endif; ?>
@@ -115,12 +125,9 @@
             </table>
 
             <div class="d-flex justify-content-between align-items-center mt-3">
-                
                 <?php if (($_GET['status'] ?? 'PENDING') === 'PENDING'): ?>
                     <h4>Tổng tiền: <span id="total-price">0₫</span></h4>
-                    <button type="button" id="checkout-btn" class="btn btn-success">
-                        Đặt hàng ngay
-                    </button>
+                    <button type="button" id="checkout-btn" class="btn btn-success">Đặt hàng ngay</button>
                 <?php endif; ?>
             </div>
         </form>
@@ -128,127 +135,133 @@
 </div>
 
 <script>
-    const selectAll = document.getElementById('select-all');
-    const checkboxes = document.querySelectorAll('.item-checkbox');
-    const totalPriceEl = document.getElementById('total-price');
-
-    function formatCurrency(num){
-        return num.toLocaleString('vi-VN') + '₫';
-    }
-
-    function calculateTotal(){
-    let total = 0;
-    document.querySelectorAll('tr[data-order-item-id]').forEach(tr=>{
-        const checkbox = tr.querySelector('.item-checkbox');
-        if(checkbox && checkbox.checked){
-            const quantity = parseInt(tr.querySelector('.quantity-input').value);
-            const price = parseInt(tr.querySelector('.price').textContent.replace(/\D/g,''));
-            total += quantity * price;
-        }
-    });
-    totalPriceEl.textContent = formatCurrency(total);
-    }
-
-
-    // Chọn tất cả
-    selectAll.addEventListener('change', ()=>{
-        checkboxes.forEach(cb => { if(!cb.disabled) cb.checked = selectAll.checked; });
-        calculateTotal();
-    });
-
-    // Checkbox từng item
-    checkboxes.forEach(cb=>{
-        cb.addEventListener('change', ()=>{
-            selectAll.checked = [...checkboxes].filter(c=>!c.disabled).every(c => c.checked);
-            calculateTotal();
-        });
-    });
-
-    // Nút tăng giảm
-    document.querySelectorAll('tr[data-order-item-id]').forEach(tr=>{
-    const decreaseBtn = tr.querySelector('.btn-decrease');
-    const increaseBtn = tr.querySelector('.btn-increase');
-    const qtyInput = tr.querySelector('.quantity-input');
-    const priceEl = tr.querySelector('.price');
-    const subtotalEl = tr.querySelector('.subtotal');
-
-    const price = parseInt(priceEl.textContent.replace(/\D/g,''));
-    
-    if(decreaseBtn && increaseBtn){
-        // GỌI AJAX TĂNG
-        increaseBtn.addEventListener('click', ()=>{
-            fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
-                method:'POST',
-                headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                body:`id=${tr.dataset.orderItemId}&type=inc`
-            })
-            .then(r=>r.json())
-            .then(res=>{
-                if(res.success){
-                    qtyInput.value = res.quantity;
-                    subtotalEl.textContent = formatCurrency(res.quantity * price);
-                    calculateTotal();
-                }
-            });
-        });
-        decreaseBtn.addEventListener('click', ()=>{
-            fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
-                method:'POST',
-                headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                body:`id=${tr.dataset.orderItemId}&type=dec`
-            })
-            .then(r=>r.json())
-            .then(res=>{
-                if(res.success){
-                    qtyInput.value = res.quantity;
-                    subtotalEl.textContent = formatCurrency(res.quantity * price);
-                    calculateTotal();
-                }
-            });
-            });
-    }
-});
-    // Checkout button
-    document.getElementById('checkout-btn').addEventListener('click', ()=>{
-        const selectedIds = [...document.querySelectorAll('.item-checkbox:checked')].map(cb=>cb.value);
-        if(selectedIds.length===0){
-            alert('Vui lòng chọn ít nhất 1 sản phẩm');
-            return;
-        }
-
-        // Redirect sang trang nhập địa chỉ & thanh toán
-        window.location.href = '/GocCaPhe/public/index.php?url=cart/checkout&items='+selectedIds.join(',');
-    });
-    document.addEventListener('click', function(e){
-        if(e.target.closest('.btn-delete')){
-            const btn = e.target.closest('.btn-delete');
-            const id = btn.dataset.id;
-
-            if(!confirm('Bạn có chắc muốn xóa?')) return;
-
-            fetch('/GocCaPhe/public/index.php?url=cart/delete', {
-                method:'POST',
-                headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                body:'id=' + id
-            })
-            .then(r=>r.json())
-            .then(res=>{
-                if(res.success){
-                    btn.closest('tr').remove();
-                    calculateTotal();
-                } else {
-                    alert('Không thể xóa sản phẩm');
-                }
-            });
-        }
-    });
-
-
-
-// Tính tổng ngay khi load
-    calculateTotal();
-
+    // Giữ nguyên phần script của bạn, nó đã hoạt động tốt cho AJAX và tính toán
 </script>
 
-
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+
+    <script>
+        const selectAll = document.getElementById('select-all');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const totalPriceEl = document.getElementById('total-price');
+
+        function formatCurrency(num){
+            return num.toLocaleString('vi-VN') + '₫';
+        }
+
+        function calculateTotal(){
+        let total = 0;
+        document.querySelectorAll('tr[data-order-item-id]').forEach(tr=>{
+            const checkbox = tr.querySelector('.item-checkbox');
+            if(checkbox && checkbox.checked){
+                const quantity = parseInt(tr.querySelector('.quantity-input').value);
+                const price = parseInt(tr.querySelector('.price').textContent.replace(/\D/g,''));
+                total += quantity * price;
+            }
+        });
+        totalPriceEl.textContent = formatCurrency(total);
+        }
+
+
+        // Chọn tất cả
+        selectAll.addEventListener('change', ()=>{
+            checkboxes.forEach(cb => { if(!cb.disabled) cb.checked = selectAll.checked; });
+            calculateTotal();
+        });
+
+        // Checkbox từng item
+        checkboxes.forEach(cb=>{
+            cb.addEventListener('change', ()=>{
+                selectAll.checked = [...checkboxes].filter(c=>!c.disabled).every(c => c.checked);
+                calculateTotal();
+            });
+        });
+
+        // Nút tăng giảm
+        document.querySelectorAll('tr[data-order-item-id]').forEach(tr=>{
+        const decreaseBtn = tr.querySelector('.btn-decrease');
+        const increaseBtn = tr.querySelector('.btn-increase');
+        const qtyInput = tr.querySelector('.quantity-input');
+        const priceEl = tr.querySelector('.price');
+        const subtotalEl = tr.querySelector('.subtotal');
+
+        const price = parseInt(priceEl.textContent.replace(/\D/g,''));
+        
+        if(decreaseBtn && increaseBtn){
+            // GỌI AJAX TĂNG
+            increaseBtn.addEventListener('click', ()=>{
+                fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    body:`id=${tr.dataset.orderItemId}&type=inc`
+                })
+                .then(r=>r.json())
+                .then(res=>{
+                    if(res.success){
+                        qtyInput.value = res.quantity;
+                        subtotalEl.textContent = formatCurrency(res.quantity * price);
+                        calculateTotal();
+                    }
+                });
+            });
+            decreaseBtn.addEventListener('click', ()=>{
+                fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    body:`id=${tr.dataset.orderItemId}&type=dec`
+                })
+                .then(r=>r.json())
+                .then(res=>{
+                    if(res.success){
+                        qtyInput.value = res.quantity;
+                        subtotalEl.textContent = formatCurrency(res.quantity * price);
+                        calculateTotal();
+                    }
+                });
+                });
+        }
+    });
+        // Checkout button
+        document.getElementById('checkout-btn').addEventListener('click', ()=>{
+            const selectedIds = [...document.querySelectorAll('.item-checkbox:checked')].map(cb=>cb.value);
+            if(selectedIds.length===0){
+                alert('Vui lòng chọn ít nhất 1 sản phẩm');
+                return;
+            }
+
+            // Redirect sang trang nhập địa chỉ & thanh toán
+            window.location.href = '/GocCaPhe/public/index.php?url=cart/checkout&items='+selectedIds.join(',');
+        });
+        document.addEventListener('click', function(e){
+            if(e.target.closest('.btn-delete')){
+                const btn = e.target.closest('.btn-delete');
+                const id = btn.dataset.id;
+
+                if(!confirm('Bạn có chắc muốn xóa?')) return;
+
+                fetch('/GocCaPhe/public/index.php?url=cart/delete', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    body:'id=' + id
+                })
+                .then(r=>r.json())
+                .then(res=>{
+                    if(res.success){
+                        btn.closest('tr').remove();
+                        calculateTotal();
+                    } else {
+                        alert('Không thể xóa sản phẩm');
+                    }
+                });
+            }
+        });
+
+
+
+    // Tính tổng ngay khi load
+        calculateTotal();
+
+    </script>
+
+
+    <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
