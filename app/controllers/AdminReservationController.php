@@ -10,7 +10,7 @@ class AdminReservationController {
         
         $reservations = Reservation::all();
         // Kiểm tra lại đường dẫn file view của bạn, nếu đặt trong thư mục con thì sửa lại cho đúng
-        require_once __DIR__ . '/../views/admin/reservations.php'; 
+        require_once __DIR__ . '/../views/admin/reservations/index.php'; 
     }
 
     public function approve() {
