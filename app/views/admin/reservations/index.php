@@ -12,10 +12,11 @@
             <th>Ngày & Giờ</th>
             <th>Ghi chú</th>
             <th>Trạng thái</th>
+            <th>Người xử lý</th>
             <th>Hành động</th>
         </tr>
         <?php if (empty($reservations)): ?>
-            <tr><td colspan="8" style="text-align: center;">Chưa có dữ liệu đặt bàn.</td></tr>
+            <tr><td colspan="9" style="text-align: center;">Chưa có dữ liệu đặt bàn.</td></tr>
         <?php else: ?>
             <?php foreach ($reservations as $r): ?>
             <tr style="text-align: center; border-bottom: 1px solid #ddd;">
@@ -44,6 +45,32 @@
                     }
                     ?>
                 </td>
+                
+                <!-- CỘT NGƯỜI XỬ LÝ (MỚI) -->
+                <td>
+                    <?php if (!empty($r['staff_name'])): ?>
+                        <?php 
+                            // Logic màu sắc: ADMIN -> Xanh, STAFF -> Vàng
+                            if ($r['staff_role'] === 'ADMIN') {
+                                $badgeStyle = "background-color: #198754; color: white;"; // Màu xanh success
+                            } else {
+                                $badgeStyle = "background-color: #ffc107; color: black;"; // Màu vàng warning
+                            }
+                        ?>
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 4px;">
+                            <?= htmlspecialchars($r['staff_name']) ?>
+                        </div>
+                        <span style="<?= $badgeStyle ?> padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                            <?= $r['staff_role'] ?>
+                        </span>
+                        <div style="font-size: 11px; color: #888; margin-top: 4px;">
+                            <?= date('H:i d/m', strtotime($r['approved_at'])) ?>
+                        </div>
+                    <?php else: ?>
+                        <span style="color: #ccc;">---</span>
+                    <?php endif; ?>
+                </td>
+
                 <td>
                 <?php if ($r['trangthai'] === 'CHO_DUYET'): ?>
                     <a href="index.php?url=admin/reservations/approve&id=<?= $r['id'] ?>"

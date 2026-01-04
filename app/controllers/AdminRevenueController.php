@@ -1,82 +1,38 @@
 <?php
+require_once __DIR__ . '/../models/RevenueModel.php';
 
-class AdminRevenueController
-{
-     private $pdo;
+class AdminRevenueController {
+    private $revenueModel;
 
-     public function __construct() {
-        $this->pdo = Database::connect();
+    public function __construct() {
+        $this->revenueModel = new RevenueModel();
     }
 
+    public function index() {
+        // 1. Lấy tham số filter (Fix lỗi lọc)
+        $filterDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
+        $filterMonth = isset($_GET['month']) ? $_GET['month'] : date('m');
+        $filterYear = isset($_GET['year']) ? $_GET['year'] : date('Y');
 
-    public function index()
-    {
-        $stmt = $this->pdo->query(
-            "SELECT * FROM revenues ORDER BY revenue_date DESC"
-        );
-        $revenues = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // 2. Lấy số liệu thống kê
+        $dailyStats = $this->revenueModel->getDailyStats($filterDate);
+        $dailySalary = $this->revenueModel->getDailyStaffCost($filterDate);
+        $dailyProfit = $dailyStats['total_revenue'] - $dailySalary;
 
-        require "../app/views/admin/revenue/index.php";
-    }
+        $monthlyStats = $this->revenueModel->getMonthlyStats($filterMonth, $filterYear);
+        $monthlyProfit = $monthlyStats['revenue'] - $monthlyStats['salary'];
 
-    public function create()
-    {
-        require "../app/views/admin/revenue/create.php";
-    }
+        // 3. [MỚI] Lấy dữ liệu biểu đồ
+        $chartData = $this->revenueModel->getRevenueByCategory($filterMonth, $filterYear);
 
-    public function store()
-    {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO revenues (revenue_date, amount, note)
-             VALUES (?, ?, ?)"
-        );
-        $stmt->execute([
-            $_POST['revenue_date'],
-            $_POST['amount'],
-            $_POST['note']
-        ]);
+        // Chuẩn bị dữ liệu cho Chart.js (Chuyển sang JSON)
+        $chartLabels = [];
+        $chartValues = [];
+        foreach ($chartData as $item) {
+            $chartLabels[] = $item['name'];
+            $chartValues[] = $item['total_money'];
+        }
 
-        header("Location: ?url=admin/revenue");
-        exit;
-    }
-
-    public function edit()
-    {
-        $stmt = $this->pdo->prepare(
-            "SELECT * FROM revenues WHERE id = ?"
-        );
-        $stmt->execute([$_GET['id']]);
-        $revenue = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        require "../app/views/admin/revenue/edit.php";
-    }
-
-    public function update()
-    {
-        $stmt = $this->pdo->prepare(
-            "UPDATE revenues
-             SET revenue_date = ?, amount = ?, note = ?
-             WHERE id = ?"
-        );
-        $stmt->execute([
-            $_POST['revenue_date'],
-            $_POST['amount'],
-            $_POST['note'],
-            $_POST['id']
-        ]);
-
-        header("Location: ?url=admin/revenue");
-        exit;
-    }
-
-    public function delete()
-    {
-        $stmt = $this->pdo->prepare(
-            "DELETE FROM revenues WHERE id = ?"
-        );
-        $stmt->execute([$_GET['id']]);
-
-        header("Location: ?url=admin/revenue");
-        exit;
+        require __DIR__ . '/../views/admin/revenue/index.php';
     }
 }

@@ -8,7 +8,7 @@ class HomeController {
         require_once __DIR__ . '/../views/user/product_list.php';
     }
     public function datban() {
-        require_once __DIR__ . '/../views/user/datban.php';
+        require_once __DIR__ . '/../views/user/create.php';
     }
 }
 

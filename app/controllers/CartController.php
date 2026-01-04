@@ -99,18 +99,30 @@ public function index()
 
 
 
-    // Trang nhập địa chỉ + chọn phương thức thanh toán
+// Trang nhập địa chỉ + chọn phương thức thanh toán
+// 1. Hiển thị trang Checkout
 public function checkout()
 {
+    // Kiểm tra có chọn món chưa
     $ids = $_GET['items'] ?? '';
     if (!$ids) {
         header('Location: ?url=cart');
         exit;
     }
 
-    $ids = array_map('intval', explode(',', $ids));
-
     $pdo = Database::connect();
+    $userId = $_SESSION['user']['id'];
+
+    // [MỚI] Lấy thông tin User hiện tại để check xem có SĐT/Địa chỉ chưa
+    $userStmt = $pdo->prepare("SELECT name, phone, address FROM users WHERE id = ?");
+    $userStmt->execute([$userId]);
+    $currentUser = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+    // Lấy danh sách món hàng
+    $ids = array_map('intval', explode(',', $ids));
+    // Dùng implode an toàn hơn cho SQL IN
+    $inQuery = implode(',', array_fill(0, count($ids), '?'));
+
     $stmt = $pdo->prepare("
         SELECT 
             oi.id,
@@ -120,11 +132,13 @@ public function checkout()
         FROM order_items oi
         JOIN orders o ON o.id = oi.order_id
         JOIN products p ON p.id = oi.product_id
-        WHERE oi.id IN (" . implode(',', $ids) . ")
+        WHERE oi.id IN ($inQuery)
           AND o.status = 'PENDING'
     ");
-    $stmt->execute();
-    $items = $stmt->fetchAll();
+    
+    // Execute với mảng ids
+    $stmt->execute($ids);
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     require __DIR__ . '/../views/user/checkout.php';
 }
@@ -162,13 +176,19 @@ public function delete()
 
 
 
+// 2. Xử lý Thanh toán
 public function payment()
 {
     $userId = $_SESSION['user']['id'];
     $items = array_map('intval', explode(',', $_POST['items'] ?? ''));
+    
+    // Lấy thông tin từ Form
+    $address = trim($_POST['address'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $method = $_POST['payment_method'] ?? 'momo';
 
-    if (empty($items)) {
-        header('Location: ?url=cart');
+    if (empty($items) || empty($address) || empty($phone)) {
+        echo "<script>alert('Vui lòng nhập đầy đủ địa chỉ và số điện thoại!'); window.history.back();</script>";
         exit;
     }
     
@@ -176,23 +196,38 @@ public function payment()
     $pdo->beginTransaction();
 
     try {
-        // 1️⃣ tạo order PAID
+        // [QUAN TRỌNG] Cập nhật lại thông tin User nếu họ nhập mới/thay đổi lúc thanh toán
+        // Vì bảng orders không có cột address/phone, ta lưu vào user để dùng cho lần sau
+        $updUser = $pdo->prepare("UPDATE users SET phone = ?, address = ? WHERE id = ?");
+        $updUser->execute([$phone, $address, $userId]);
+
+        // Cập nhật lại session để hiển thị đúng ngay lập tức (nếu cần dùng ở chỗ khác)
+        $_SESSION['user']['phone'] = $phone;
+        $_SESSION['user']['address'] = $address;
+
+        // 1️⃣ Tạo order mới với trạng thái PAID (hoặc PENDING chờ duyệt tùy logic)
         $stmt = $pdo->prepare("
-            INSERT INTO orders (user_id, status, total_price)
-            VALUES (?, 'PAID', 0)
+            INSERT INTO orders (user_id, status, total_price, created_at)
+            VALUES (?, 'PAID', 0, NOW())
         ");
         $stmt->execute([$userId]);
         $newOrderId = $pdo->lastInsertId();
 
-        // 2️⃣ chuyển item sang order mới
+        // 2️⃣ Chuyển các items đã chọn sang order mới này
+        // Cần tạo placeholder cho câu lệnh IN
+        $inQuery = implode(',', array_fill(0, count($items), '?'));
+        
+        // Merge tham số: order_id mới + danh sách item ids
+        $params = array_merge([$newOrderId], $items);
+
         $stmt = $pdo->prepare("
             UPDATE order_items
             SET order_id = ?
-            WHERE id IN (" . implode(',', $items) . ")
+            WHERE id IN ($inQuery)
         ");
-        $stmt->execute([$newOrderId]);
+        $stmt->execute($params);
 
-        // 3️⃣ tính tổng tiền
+        // 3️⃣ Tính tổng tiền của Order mới
         $stmt = $pdo->prepare("
             SELECT SUM(quantity * price)
             FROM order_items
@@ -201,7 +236,7 @@ public function payment()
         $stmt->execute([$newOrderId]);
         $totalPrice = $stmt->fetchColumn() ?? 0;
 
-        // 4️⃣ update total_price
+        // 4️⃣ Update total_price cho Order
         $stmt = $pdo->prepare("
             UPDATE orders
             SET total_price = ?
@@ -209,13 +244,23 @@ public function payment()
         ");
         $stmt->execute([$totalPrice, $newOrderId]);
 
+        // 5️⃣ Lưu session để hiển thị trang Success
+        $_SESSION['last_order'] = [
+            'id' => $newOrderId,
+            'address' => $address,
+            'phone' => $phone,
+            'method' => $method,
+            'total' => $totalPrice
+        ];
+
         $pdo->commit();
 
         require __DIR__ . '/../views/user/payment_success.php';
 
     } catch (Exception $e) {
         $pdo->rollBack();
-        echo "Lỗi thanh toán";
+        // Ghi log lỗi thực tế để debug: error_log($e->getMessage());
+        echo "Lỗi thanh toán: " . $e->getMessage();
     }
 }
 

@@ -6,14 +6,23 @@ class OrderController
     {
         $pdo = Database::connect();
 
-        $stmt = $pdo->query("
-            SELECT o.*, u.name AS customer_name
+        // SỬA QUERY: 
+        // 1. LEFT JOIN thêm 1 lần nữa với bảng users (đặt alias là 'staff') để lấy thông tin người duyệt.
+        // 2. Lấy tất cả trạng thái thay vì chỉ 'PAID'.
+        $sql = "
+            SELECT 
+                o.*, 
+                u.name AS customer_name,
+                staff.name AS staff_name,
+                staff.role AS staff_role
             FROM orders o
             JOIN users u ON o.user_id = u.id
-            WHERE o.status IN ('PAID')
+            LEFT JOIN users staff ON o.approved_by = staff.id
+            WHERE o.status IN ('PAID', 'APPROVED', 'CANCELLED', 'SHIPPING', 'COMPLETED')
             ORDER BY o.created_at DESC
-        ");
+        ";
 
+        $stmt = $pdo->query($sql);
         $orders = $stmt->fetchAll();
 
         require __DIR__ . '/../views/admin/orders/index.php';

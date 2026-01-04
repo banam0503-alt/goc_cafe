@@ -1,55 +1,52 @@
 <?php
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../models/Reservation.php';
 
 class ReservationController {
 
-    public function store() {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+    // 1. Hiển thị form đặt bàn
+    public function create() {
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user'])) {
+            header("Location: ?url=login");
+            exit;
+        }
+        require_once __DIR__ . '/../views/user/create.php';
     }
-        // === LẤY ĐÚNG TÊN FIELD TỪ FORM ===
-        $hoten   = trim($_POST['hoten'] ?? '');
-        $phone   = trim($_POST['phone'] ?? '');
-        $songuoi = (int)($_POST['songuoi'] ?? 0);
-        $ngay    = $_POST['ngay'] ?? '';
-        $gio     = $_POST['gio'] ?? '';
-        $ghichu  = trim($_POST['ghichu'] ?? '');
 
-        // === VALIDATE ===
-        if ($hoten === '' || $phone === '' || $songuoi <= 0 || $ngay === '' || $gio === '') {
-            $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
-            header("Location: index.php?url=datban");
+    // 2. Xử lý lưu đơn đặt bàn
+    public function store() {
+        if (!isset($_SESSION['user'])) {
+            header("Location: ?url=login");
             exit;
         }
 
-        if (!preg_match('/^0\d{9}$/', $phone)) {
-            $_SESSION['error'] = "Số điện thoại không hợp lệ";
-            header("Location: index.php?url=datban");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'user_id' => $_SESSION['user']['id'],
+                'hoten'   => $_POST['hoten'],
+                'phone'   => $_POST['phone'],
+                'songuoi' => $_POST['songuoi'],
+                'ngay'    => $_POST['ngay'],
+                'gio'     => $_POST['gio'],
+                'ghichu'  => $_POST['ghichu'] ?? ''
+            ];
+
+            Reservation::create($data);
+
+            echo "<script>alert('Đặt bàn thành công! Vui lòng chờ xác nhận.'); window.location.href='?url=reservation/history';</script>";
+        }
+    }
+
+    // 3. Xem lịch sử đặt bàn
+    public function history() {
+        if (!isset($_SESSION['user'])) {
+            header("Location: ?url=login");
             exit;
         }
 
-        if ($songuoi > 500) {
-            $_SESSION['error'] = "Số người tối đa là 500";
-            header("Location: index.php?url=datban");
-            exit;
-        }
+        $userId = $_SESSION['user']['id'];
+        $myReservations = Reservation::getByUser($userId);
 
-        // === LƯU DB ===
-        Reservation::create([
-            'hoten'   => $hoten,
-            'phone'   => $phone,
-            'songuoi' => $songuoi,
-            'ngay'    => $ngay,
-            'gio'     => $gio,
-            'ghichu'  => $ghichu
-        ]);
-
-        $_SESSION['success'] = "Đặt bàn thành công!";
-        header("Location: index.php?url=datban");
-        exit;
+        require_once __DIR__ . '/../views/user/history.php';
     }
 }

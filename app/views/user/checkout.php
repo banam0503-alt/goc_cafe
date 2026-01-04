@@ -1,53 +1,102 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<?php
+require_once __DIR__ . '/../layouts/header.php';
+?>
 
-<div class="container mt-4">
-    <h2>Thông tin giao hàng & thanh toán</h2>
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-primary mb-3">📦 Thông tin giao hàng & thanh toán</h2>
+            
+            <!-- Kiểm tra xem user có thiếu thông tin không -->
+            <?php if (empty($currentUser['address']) || empty($currentUser['phone'])): ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Bạn chưa cập nhật đầy đủ <strong>Địa chỉ</strong> hoặc <strong>Số điện thoại</strong>. 
+                    Vui lòng nhập bên dưới để tiếp tục thanh toán và cập nhật hồ sơ.
+                </div>
+            <?php endif; ?>
 
-    <form method="POST" action="/GocCaPhe/public/index.php?url=cart/payment">
-        <input type="hidden" name="items" value="<?= implode(',', array_column($items,'id')) ?>">
+            <form method="POST" action="/GocCaPhe/public/index.php?url=cart/payment">
+                <!-- Truyền danh sách ID món hàng -->
+                <input type="hidden" name="items" value="<?= implode(',', array_column($items,'id')) ?>">
 
-        <div class="mb-3">
-            <label>Địa chỉ nhận hàng</label>
-            <input type="text" name="address" class="form-control" required>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <strong>1. Thông tin người nhận</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" value="<?= htmlspecialchars($currentUser['name']) ?>" disabled>
+                            <small class="text-muted">Tên lấy theo tài khoản đăng ký.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-danger fw-bold">Địa chỉ nhận hàng (*)</label>
+                            <input type="text" name="address" class="form-control" 
+                                   value="<?= htmlspecialchars($currentUser['address'] ?? '') ?>" 
+                                   placeholder="Ví dụ: 123 Đường ABC, Quận 1, TP.HCM" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-danger fw-bold">Số điện thoại (*)</label>
+                            <input type="text" name="phone" class="form-control" 
+                                   value="<?= htmlspecialchars($currentUser['phone'] ?? '') ?>" 
+                                   placeholder="Ví dụ: 0912345678" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <strong>2. Phương thức thanh toán</strong>
+                    </div>
+                    <div class="card-body">
+                        <select name="payment_method" class="form-select" required>
+                            <option value="momo">Ví điện tử Momo</option>
+                            <option value="bank">Chuyển khoản Ngân hàng (VietQR)</option>
+                            <option value="vnpay">Cổng thanh toán VNPAY</option>
+                            <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <strong>3. Kiểm tra đơn hàng</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group mb-3">
+                        <?php 
+                        $total = 0;
+                        foreach ($items as $item): 
+                            $subtotal = $item['price'] * $item['quantity'];
+                            $total += $subtotal;
+                        ?>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="my-0"><?= htmlspecialchars($item['name']) ?></h6>
+                                    <small class="text-muted">Số lượng: <?= $item['quantity'] ?></small>
+                                </div>
+                                <span class="text-muted"><?= number_format($subtotal,0,',','.') ?>₫</span>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4>Tổng thanh toán:</h4>
+                            <h3 class="text-success fw-bold"><?= number_format($total,0,',','.') ?>₫</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a href="?url=cart" class="btn btn-secondary me-2">Quay lại giỏ hàng</a>
+                    <button type="submit" class="btn btn-success btn-lg px-5">XÁC NHẬN THANH TOÁN</button>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label>Số điện thoại</label>
-            <input type="text" name="phone" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>Phương thức thanh toán</label>
-            <select name="payment_method" class="form-select" required>
-                <option value="momo">Momo</option>
-                <option value="bank">Tài khoản ngân hàng</option>
-                <option value="vnpay">VN Pay</option>
-            </select>
-        </div>
-
-        <h4>Đơn hàng</h4>
-        <ul class="list-group mb-3">
-        <?php 
-        $total = 0;
-        foreach ($items as $item): 
-            $subtotal = $item['price'] * $item['quantity'];
-            $total += $subtotal;
-        ?>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <?= htmlspecialchars($item['name']) ?> x <?= $item['quantity'] ?>
-                <span><?= number_format($subtotal,0,',','.') ?>₫</span>
-            </li>
-        <?php endforeach; ?>
-        </ul>
-
-        <h4 class="text-end">
-            Tổng tiền:
-            <span class="text-success fw-bold">
-                <?= number_format($total,0,',','.') ?>₫
-            </span>
-        </h4>
-
-
-        <button type="submit" class="btn btn-success mt-3">Thanh toán</button>
-    </form>
+    </div>
 </div>
+
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

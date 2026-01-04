@@ -7,6 +7,8 @@ error_reporting(E_ALL);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once __DIR__ . '/../core/bootstrap.php';
+// THÊM DÒNG NÀY ĐỂ LOAD THƯ VIỆN
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $url = $_GET['url'] ?? '';
 
@@ -206,6 +208,24 @@ switch ($url) {
     
     /* ADMIN - RESERVATIONS */
 
+    // 1. Form đặt bàn
+    case 'reservation/create':
+        require_once __DIR__ . '/../app/controllers/ReservationController.php';
+        (new ReservationController)->create();
+        break;
+
+    // 2. Xử lý lưu
+    case 'reservation/store':
+        require_once __DIR__ . '/../app/controllers/ReservationController.php';
+        (new ReservationController)->store();
+        break;
+
+    // 3. Xem lịch sử
+    case 'reservation/history':
+        require_once __DIR__ . '/../app/controllers/ReservationController.php';
+        (new ReservationController)->history();
+        break;
+
     case 'admin/reservations':
         requireStaffOrAdmin();
         (new AdminReservationController)->index();
@@ -228,30 +248,6 @@ switch ($url) {
         (new AdminRevenueController)->index();
         break;
 
-    case 'admin/revenue/create':
-        requireRole('ADMIN');
-        (new AdminRevenueController)->create();
-        break;
-
-    case 'admin/revenue/store':
-        requireRole('ADMIN');
-        (new AdminRevenueController)->store();
-        break;
-
-    case 'admin/revenue/edit':
-        requireRole('ADMIN');
-        (new AdminRevenueController)->edit();
-        break;
-
-    case 'admin/revenue/update':
-        requireRole('ADMIN');
-        (new AdminRevenueController)->update();
-        break;
-
-    case 'admin/revenue/delete':
-        requireRole('ADMIN');
-        (new AdminRevenueController)->delete();
-        break;
 
     case 'register':
         (new AuthController)->register();

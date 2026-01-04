@@ -19,10 +19,12 @@
 <!-- HEADER STAFF -->
 <div class="staff-header shadow">
     <div class="container d-flex justify-content-between align-items-center">
-        <h3 class="m-0"><i class="fas fa-user-tie"></i> Xin chào, <?= htmlspecialchars($_SESSION['user']['name']) ?></h3>
+
+        <h3 class="m-0"><i ></i> Xin chào, <?= htmlspecialchars($_SESSION['user']['name']) ?></h3>
         <div>
             <a href="?url=logout" class="btn btn-light btn-sm fw-bold">Đăng xuất</a>
         </div>
+        
     </div>
 </div>
 
@@ -34,7 +36,7 @@
             
             <div class="row g-3">
                 <!-- 1. Cập nhật Profile -->
-                <div class="col-6">
+                <div class="">
                     <a href="?url=profile" class="text-decoration-none">
                         <div class="feature-box">
                             <i class="fas fa-id-card"></i>
@@ -44,7 +46,7 @@
                     </a>
                 </div>
                 <!-- 2. Duyệt Đơn -->
-                <div class="col-6">
+                <div class="">
                     <a href="?url=admin/orders" class="text-decoration-none">
                         <div class="feature-box">
                             <i class="fas fa-receipt"></i>
@@ -54,7 +56,7 @@
                     </a>
                 </div>
                 <!-- 3. Duyệt Bàn -->
-                <div class="col-6">
+                <div class="">
                     <a href="?url=admin/reservations" class="text-decoration-none">
                         <div class="feature-box">
                             <i class="fas fa-chair"></i>
@@ -64,7 +66,7 @@
                     </a>
                 </div>
                 <!-- 4. Xem trang chủ -->
-                <div class="col-6">
+                <div class="">
                     <a href="/GocCaPhe/public/index.php" class="text-decoration-none">
                         <div class="feature-box">
                             <i class="fas fa-home"></i>
