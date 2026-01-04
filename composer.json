@@ -12,6 +12,7 @@
     }
   ],
   "require": {
-    "maennchen/zipstream-php": "2.1.0"
+    "maennchen/zipstream-php": "2.1.0",
+    "phpoffice/phpspreadsheet": "^2.1"
   }
 }
