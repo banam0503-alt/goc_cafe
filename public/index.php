@@ -244,25 +244,33 @@ switch ($url) {
     case 'admin/reservations':
         requireStaffOrAdmin();
         (new AdminReservationController)->index();
-    break;
+        break;
 
     case 'admin/reservations/approve':
         requireStaffOrAdmin();
         (new AdminReservationController)->approve();
-    break;
+        break;
 
     case 'admin/reservations/cancel':
         requireStaffOrAdmin();
         (new AdminReservationController)->cancel();
-    break;
+        break;
+
+    case 'admin/reservations/export':
+        requireRole('ADMIN'); 
+        (new AdminReservationController)->export();
         break;
     
      /* ADMIN - REVENUE MANAGEMENT */
-    case 'admin/revenues':   // hỗ trợ cả 2 URL
+    case 'admin/revenues': 
         requireRole('ADMIN');
         (new AdminRevenueController)->index();
         break;
 
+    case 'admin/revenues/export':
+        requireRole('ADMIN');
+        (new AdminRevenueController)->export();
+        break;
 
     case 'register':
         (new AuthController)->register();

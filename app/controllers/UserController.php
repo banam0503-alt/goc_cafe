@@ -24,6 +24,18 @@ class UserController {
             $name = trim($_POST['name']);
             $phone = trim($_POST['phone']);
             $address = trim($_POST['address']);
+
+            // --- THÊM CHECK SỐ ĐIỆN THOẠI TẠI ĐÂY ---
+            // Regex: /^0\d{9}$/ 
+            // ^0    : Bắt đầu bằng số 0
+            // \d{9} : Theo sau là đúng 9 chữ số (tổng cộng là 10 số)
+            // $     : Kết thúc chuỗi
+            if (!preg_match('/^0\d{9}$/', $phone)) {
+                // Nếu không đúng định dạng, quay lại trang profile và báo lỗi
+                header('Location: /GocCaPhe/public/index.php?url=profile&status=error_phone');
+                exit; // Dừng code ngay lập tức, không cho chạy tiếp xuống dưới
+            }
+            // ------------------------------------------
             
             // 2. Xử lý Avatar
             // Mặc định lấy avatar cũ từ session
@@ -54,7 +66,6 @@ class UserController {
 
             if ($result) {
                 // 4. CẬP NHẬT LẠI SESSION (Rất quan trọng)
-                // Để khi reload trang, thông tin mới hiện ra ngay lập tức
                 $_SESSION['user']['name'] = $name;
                 $_SESSION['user']['phone'] = $phone;
                 $_SESSION['user']['address'] = $address;
@@ -67,7 +78,6 @@ class UserController {
             }
         }
     }
-
     // ... (Giữ nguyên phần updatePassword cũ của bạn) ...
 }
 ?>

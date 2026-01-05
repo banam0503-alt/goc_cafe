@@ -34,6 +34,29 @@
             <div class="profile-header">
                 <h2>Hồ sơ của tôi</h2>
                 <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+
+                <!-- ================= THÊM ĐOẠN NÀY VÀO ĐÂY ================= -->
+                <?php if (isset($_GET['status'])): ?>
+                    <!-- Thông báo Thành công -->
+                    <?php if ($_GET['status'] == 'success'): ?>
+                        <div class="alert alert-success mt-3" style="color: #155724; background-color: #d4edda; border-color: #c3e6cb; padding: 10px; border-radius: 5px;">
+                            <i class="fas fa-check-circle"></i> Cập nhật hồ sơ thành công!
+                        </div>
+                    
+                    <!-- Thông báo Lỗi SĐT -->
+                    <?php elseif ($_GET['status'] == 'error_phone'): ?>
+                        <div class="alert alert-danger mt-3" style="color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; padding: 10px; border-radius: 5px;">
+                            <i class="fas fa-exclamation-triangle"></i> Số điện thoại không hợp lệ! Vui lòng nhập đủ 10 số và bắt đầu bằng số 0.
+                        </div>
+
+                    <!-- Thông báo Lỗi chung -->
+                    <?php elseif ($_GET['status'] == 'error_update'): ?>
+                         <div class="alert alert-danger mt-3" style="color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; padding: 10px; border-radius: 5px;">
+                            <i class="fas fa-times-circle"></i> Có lỗi xảy ra khi cập nhật.
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <!-- ================= KẾT THÚC ĐOẠN THÊM ================= -->
             </div>
 
             <div class="profile-body">

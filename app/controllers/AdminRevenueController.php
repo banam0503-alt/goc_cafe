@@ -35,4 +35,19 @@ class AdminRevenueController {
 
         require __DIR__ . '/../views/admin/revenue/index.php';
     }
+
+    // --- HÀM MỚI: XUẤT EXCEL ---
+    public function export() {
+        if (session_status() == PHP_SESSION_NONE) session_start();
+
+        // 1. Lấy tháng/năm từ URL
+        $month = $_GET['month'] ?? date('m');
+        $year  = $_GET['year'] ?? date('Y');
+        
+        // 2. Lấy thông tin người xuất
+        $exportName = $_SESSION['user']['name'] ?? 'Admin';
+        
+        // 3. Gọi Model xử lý xuất file
+        $this->revenueModel->exportRevenueExcel($month, $year, $exportName);
+    }
 }
