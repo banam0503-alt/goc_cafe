@@ -17,6 +17,16 @@ class AuthController {
         $email = trim($_POST['email'] ?? '');
         $password = trim($_POST['password'] ?? '');
 
+        // CHECK EMAIL PHẢI KẾT THÚC BẰNG .com
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
+        !preg_match('/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$/', $email)) {
+
+        $_SESSION['error'] = 'Email phải đúng định dạng và kết thúc bằng .com';
+        header('Location: /GocCaPhe/public/index.php?url=register');
+        exit;
+    }
+
+
         if ($email === '' || $password === '') {
             $_SESSION['error'] = 'Vui lòng nhập đầy đủ email và mật khẩu';
             header('Location: /GocCaPhe/public/index.php?url=login');
@@ -72,6 +82,16 @@ class AuthController {
     $password         = trim($_POST['password'] ?? '');
     $passwordConfirm  = trim($_POST['password_confirm'] ?? '');
 
+    // CHECK EMAIL PHẢI KẾT THÚC BẰNG .com
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
+        !preg_match('/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$/', $email)) {
+
+        $_SESSION['error'] = 'Email phải đúng định dạng và kết thúc bằng .com';
+        header('Location: /GocCaPhe/public/index.php?url=login');
+        exit;
+    }
+
+
     // 1. Kiểm tra định dạng email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = 'Email không đúng định dạng';
@@ -93,17 +113,12 @@ class AuthController {
     }
 
     // 3. kiểm tra độ mạnh mật khẩu
-    if (
-        strlen($password) < 8 ||
-        !preg_match('/[A-Z]/', $password) ||
-        !preg_match('/[a-z]/', $password) ||
-        !preg_match('/[0-9]/', $password)
-    ) {
-        $_SESSION['error'] =
-            'Mật khẩu phải ≥ 8 ký tự, gồm chữ hoa, chữ thường và số';
+    if (strlen($password) < 8) {
+        $_SESSION['error'] = 'Mật khẩu phải từ 8 ký tự trở lên';
         header('Location: /GocCaPhe/public/index.php?url=register');
         exit;
     }
+
 
     $pdo = Database::connect();
 

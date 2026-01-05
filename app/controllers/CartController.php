@@ -284,42 +284,61 @@ public function updateQuantity()
 {
     $id = $_POST['id'] ?? 0;
     $type = $_POST['type'] ?? '';
+    $newQty = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0; // Nhận số lượng nếu gõ trực tiếp
     $userId = $_SESSION['user']['id'];
 
-    if (!$id || !in_array($type, ['inc','dec'])) {
-        echo json_encode(['success'=>false]);
+    if (!$id) {
+        echo json_encode(['success' => false, 'message' => 'ID không hợp lệ']);
         exit;
     }
 
     $pdo = Database::connect();
 
     if ($type === 'inc') {
+        // Tăng nhưng phải kiểm tra xem hiện tại đã là 50 chưa
         $stmt = $pdo->prepare("
             UPDATE order_items oi
             JOIN orders o ON o.id = oi.order_id
             SET oi.quantity = oi.quantity + 1
-            WHERE oi.id=? AND o.status='PENDING' AND o.user_id=?
+            WHERE oi.id=? AND o.status='PENDING' AND o.user_id=? AND oi.quantity < 50
         ");
-    } else {
+        $stmt->execute([$id, $userId]);
+    } 
+    elseif ($type === 'dec') {
+        // Giảm nhưng không thấp hơn 1
         $stmt = $pdo->prepare("
             UPDATE order_items oi
             JOIN orders o ON o.id = oi.order_id
             SET oi.quantity = GREATEST(1, oi.quantity - 1)
             WHERE oi.id=? AND o.status='PENDING' AND o.user_id=?
         ");
+        $stmt->execute([$id, $userId]);
+    } 
+    elseif ($type === 'set') {
+        // Xử lý khi người dùng gõ số trực tiếp
+        if ($newQty > 50) $newQty = 50;
+        if ($newQty < 1) $newQty = 1;
+
+        $stmt = $pdo->prepare("
+            UPDATE order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            SET oi.quantity = ?
+            WHERE oi.id=? AND o.status='PENDING' AND o.user_id=?
+        ");
+        $stmt->execute([$newQty, $id, $userId]);
     }
 
-    $stmt->execute([$id, $userId]);
-
+    // Lấy lại số lượng mới nhất từ DB để trả về cho giao diện
     $stmt = $pdo->prepare("SELECT quantity FROM order_items WHERE id=?");
     $stmt->execute([$id]);
-    $qty = $stmt->fetchColumn();
+    $currentQty = $stmt->fetchColumn();
 
-    echo json_encode(['success'=>true, 'quantity'=>$qty]);
+    echo json_encode([
+        'success' => true, 
+        'quantity' => (int)$currentQty
+    ]);
     exit;
 }
-
-
 }
 
 
