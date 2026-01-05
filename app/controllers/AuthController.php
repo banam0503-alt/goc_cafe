@@ -72,6 +72,12 @@ class AuthController {
     $password         = trim($_POST['password'] ?? '');
     $passwordConfirm  = trim($_POST['password_confirm'] ?? '');
 
+    // 1. Kiểm tra định dạng email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Email không đúng định dạng';
+        header('Location: index.php?url=register');
+        exit;
+    }
     // 1. kiểm tra rỗng
     if ($name === '' || $email === '' || $password === '' || $passwordConfirm === '') {
         $_SESSION['error'] = 'Vui lòng nhập đầy đủ thông tin';

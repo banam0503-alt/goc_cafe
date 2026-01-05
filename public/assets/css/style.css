@@ -1,193 +1,193 @@
 .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
 }
 
 /* CARD SẢN PHẨM */
 .product-card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 300px;
-    margin: 0 auto;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    padding-bottom: 15px;
-    /* khoảng cách dưới để button không dính */
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 300px;
+  margin: 0 auto;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  padding-bottom: 15px;
+  /* khoảng cách dưới để button không dính */
 }
 
 .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* ẢNH SẢN PHẨM */
 .product-image {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 12px;
-    position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
 }
 
 .product-image img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 12px;
-    transition: transform 0.3s, filter 0.3s;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s, filter 0.3s;
 }
 
 .product-image img:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
 /* INFO SẢN PHẨM */
 .product-info h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
-    margin: 10px 0 4px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 10px 0 4px 0;
 }
 
 .product-info .category {
-    font-size: 0.9rem;
-    color: #555;
-    margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 6px;
 }
 
 .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
 }
 
 .status.available {
-    color: #0f5132;
-    background-color: #d1e7dd;
+  color: #0f5132;
+  background-color: #d1e7dd;
 }
 
 .status.hidden {
-    color: #6c757d;
-    background-color: #e2e3e5;
+  color: #6c757d;
+  background-color: #e2e3e5;
 }
 
 /* PRICE + BUTTON */
 .price-btn-wrapper {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 10px 0 15px 0;
-    /* khoảng cách trên và dưới */
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0 15px 0;
+  /* khoảng cách trên và dưới */
 }
 
 .price-btn-wrapper .price {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #28a745;
-    margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #28a745;
+  margin-bottom: 10px;
 }
 
 .price-btn-wrapper button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    transition: transform 0.2s, background-color 0.3s;
-    margin-top: 0;
-    /* button sát giá nhưng không dính đáy */
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  transition: transform 0.2s, background-color 0.3s;
+  margin-top: 0;
+  /* button sát giá nhưng không dính đáy */
 }
 
 .price-btn-wrapper button:hover {
-    background-color: #218838;
-    transform: scale(1.05);
+  background-color: #218838;
+  transform: scale(1.05);
 }
 
 .price-btn-wrapper button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    transform: none;
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* HIỆU ỨNG CLICK CARD */
 .product-card:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
 }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-    .product-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-    }
+  .product-list {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
 
-    .product-image img {
-        height: 250px;
-    }
+  .product-image img {
+    height: 250px;
+  }
 }
 
 @media (max-width: 768px) {
-    .product-list {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-    }
+  .product-list {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
 
-    .product-image img {
-        height: 220px;
-    }
+  .product-image img {
+    height: 220px;
+  }
 
-    .price-btn-wrapper .price {
-        font-size: 1rem;
-    }
+  .price-btn-wrapper .price {
+    font-size: 1rem;
+  }
 
-    .price-btn-wrapper button {
-        padding: 8px 16px;
-        font-size: 0.95rem;
-    }
+  .price-btn-wrapper button {
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
 }
 
 .cart-toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #4caf50;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 6px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    animation: fadeout 3s forwards;
-    z-index: 9999;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  animation: fadeout 3s forwards;
+  z-index: 9999;
 }
 
 @keyframes fadeout {
-    0% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 1;
+  }
 
-    80% {
-        opacity: 1;
-    }
+  80% {
+    opacity: 1;
+  }
 
-    100% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }

@@ -28,6 +28,7 @@
             <select name="status" class="form-select">
                 <option value="AVAILABLE" <?= $product['status']=='AVAILABLE'?'selected':'' ?>>AVAILABLE</option>
                 <option value="HIDDEN" <?= $product['status']=='HIDDEN'?'selected':'' ?>>HIDDEN</option>
+                <option value="SPECIAL" <?= $product['status']=='SPECIAL'?'selected':'' ?>>SPECIAL</option>
             </select>
         </div>
         <div class="mb-3">

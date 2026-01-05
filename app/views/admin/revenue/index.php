@@ -83,7 +83,7 @@
                     <!-- Chỉ hiển thị Tổng doanh thu tháng -->
                     <h6 class="text-muted text-uppercase">Tổng doanh thu tháng <?= $filterMonth ?></h6>
                     <h1 class="display-4 fw-bold text-success">
-                        <?= number_format($monthlyStats['revenue']) ?> đ
+                                    <h4 class="fw-bold text-success"><?= number_format($dailyStats['total_revenue']) ?>đ</h4>
                     </h1>
                 </div>
             </div>

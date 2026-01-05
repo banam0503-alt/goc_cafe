@@ -25,6 +25,7 @@
             <select name="status" class="form-select">
                 <option value="AVAILABLE">AVAILABLE</option>
                 <option value="HIDDEN">HIDDEN</option>
+                <option value="SPECIAL">SPECIAL</option>
             </select>
         </div>
         <div class="mb-3">

@@ -28,8 +28,19 @@
         <td><?= number_format($p['price']) ?>₫</td>
         <td><?= htmlspecialchars($p['description']) ?></td>
         <td>
-            <span class="badge <?= $p['status']=='AVAILABLE'?'bg-success':'bg-secondary' ?>"><?= $p['status'] ?></span>
-        </td>
+    <?php
+        $statusClass = 'bg-secondary';
+        if ($p['status'] === 'AVAILABLE') {
+            $statusClass = 'bg-success';
+        } elseif ($p['status'] === 'SPECIAL') {
+            $statusClass = 'bg-warning';
+        }
+    ?>
+    <span class="badge <?= $statusClass ?>">
+        <?= $p['status'] ?>
+    </span>
+</td>
+
         <td class="text-center">
             <?php if($p['image']): ?>
                 <!-- Button mở modal -->

@@ -2,7 +2,7 @@
 
 <div class="container mt-5 mb-5">
     <div class="text-center mb-4">
-        <h2 class="text-primary">☕ Đặt Bàn Online</h2>
+        <h2 style= "color: #4b2102ff !important">☕ Đặt Bàn Online</h2>
         
         <!-- 2 NÚT CHỨC NĂNG -->
         <div class="btn-group mt-3">
@@ -22,7 +22,17 @@
                         </div>
                         <div class="mb-3">
                             <label>Số điện thoại</label>
-                            <input type="text" name="phone" class="form-control" value="<?= $_SESSION['user']['phone'] ?? '' ?>" required>
+                            <input
+                                type="text"
+                                name="phone"
+                                class="form-control"
+                                value="<?= $_SESSION['user']['phone'] ?? '' ?>"
+                                pattern="0[0-9]{9}"
+                                maxlength="10"
+                                title="Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                required
+                            >
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -36,7 +46,7 @@
                         </div>
                         <div class="mb-3">
                             <label>Số lượng người</label>
-                            <input type="number" name="songuoi" class="form-control" min="1" max="20" value="2" required>
+                            <input type="number" name="songuoi" class="form-control" min="1" max="100" value="2" required>
                         </div>
                         <div class="mb-3">
                             <label>Ghi chú (Nếu có)</label>

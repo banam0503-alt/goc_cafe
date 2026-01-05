@@ -58,7 +58,7 @@
 
                         <div class="form-group-row">
                             <label>Địa chỉ</label>
-                            <textarea name="address" rows="3" placeholder="Địa chỉ nhận hàng"><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
+                            <textarea name="address" rows="3" placeholder="Địa chỉ "><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
                         </div>
 
                         <div class="form-group-row" style="margin-top: 30px;">
