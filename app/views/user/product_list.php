@@ -1,5 +1,19 @@
 <?php
 require_once __DIR__ . '/../layouts/header.php';
+
+/**
+ * Tách sản phẩm SPECIAL và sản phẩm thường
+ */
+$specialProducts = [];
+$normalProducts  = [];
+
+foreach ($products as $p) {
+    if ($p['status'] === 'SPECIAL') {
+        $specialProducts[] = $p;
+    } else {
+        $normalProducts[] = $p;
+    }
+}
 ?>
 
 <div class="container">
@@ -18,38 +32,74 @@ require_once __DIR__ . '/../layouts/header.php';
         </select>
     </form>
 
+    <!-- ===== MÓN ĐẶC BIỆT ===== -->
+    <?php if (!empty($specialProducts)): ?>
+        <h2 style="margin-top:30px;">🌟 Món đặc biệt</h2>
+
+        <div class="product-list">
+            <?php foreach ($specialProducts as $p): ?>
+                <div class="product-card special">
+                    <div class="product-image">
+                        <img src="/GocCaPhe/public/assets/img/<?= htmlspecialchars($p['image']) ?>">
+                    </div>
+
+                    <div class="product-info">
+                        <h3><?= htmlspecialchars($p['name']) ?></h3>
+                        <p class="category">Danh mục: <?= htmlspecialchars($p['category_name']) ?></p>
+
+                        <p class="status special">🔥 Món đặc biệt</p>
+
+                        <div class="price-btn-wrapper">
+                            <p class="price"><?= number_format($p['price'], 0, ',', '.') ?>₫</p>
+                            <form class="add-to-cart-form">
+                                <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
+                                <button type="submit">Thêm vào giỏ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- ===== CÁC MÓN CÒN LẠI ===== -->
+    <h2 style="margin-top:40px;">☕ Các món khác</h2>
+
     <div class="product-list">
-    <?php foreach ($products as $p): ?>
-        <div class="product-card">
-            <div class="product-image">
-                <img src="/GocCaPhe/public/assets/img/<?= htmlspecialchars($p['image']) ?>" alt="<?= htmlspecialchars($p['name']) ?>">
-            </div>
+        <?php foreach ($normalProducts as $p): ?>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/GocCaPhe/public/assets/img/<?= htmlspecialchars($p['image']) ?>">
+                </div>
 
-            <div class="product-info">
-                <h3><?= htmlspecialchars($p['name']) ?></h3>
-                <p class="category">Danh mục: <?= htmlspecialchars($p['category_name']) ?></p>
+                <div class="product-info">
+                    <h3><?= htmlspecialchars($p['name']) ?></h3>
+                    <p class="category">Danh mục: <?= htmlspecialchars($p['category_name']) ?></p>
 
-                <p class="status <?= $p['status'] == 'AVAILABLE' ? 'available' : 'hidden' ?>">
-                    <?= $p['status'] == 'AVAILABLE' ? '✔ Còn hàng' : '✖ Hết hàng' ?>
-                </p>
+                    <p class="status <?= $p['status'] === 'AVAILABLE' ? 'available' : 'hidden' ?>">
+                        <?= $p['status'] === 'AVAILABLE' ? '✔ Còn hàng' : '✖ Hết hàng' ?>
+                    </p>
 
-                <div class="price-btn-wrapper">
-                    <p class="price"><?= number_format($p['price'], 0, ',', '.') ?>₫</p>
-                    <form class="add-to-cart-form">
-                        <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
-                        <button type="submit" <?= $p['status'] == 'HIDDEN' ? 'disabled' : '' ?>>Thêm vào giỏ</button>
-                    </form>
+                    <div class="price-btn-wrapper">
+                        <p class="price"><?= number_format($p['price'], 0, ',', '.') ?>₫</p>
+                        <form class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
+                            <button type="submit" <?= $p['status'] === 'HIDDEN' ? 'disabled' : '' ?>>
+                                Thêm vào giỏ
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    </div>
 </div>
 
-</div>
 <script>
 document.querySelectorAll('.add-to-cart-form').forEach(form => {
     form.addEventListener('submit', async e => {
         e.preventDefault();
+
         const formData = new FormData(form);
 
         const res = await fetch('/GocCaPhe/public/index.php?url=cart/add', {
@@ -57,20 +107,17 @@ document.querySelectorAll('.add-to-cart-form').forEach(form => {
             body: formData
         });
 
-        if(res.ok){
+        if (res.ok) {
             const data = await res.json();
-
-            if(data.success){
-                // toast
+            if (data.success) {
                 const toast = document.createElement('div');
                 toast.className = 'cart-toast';
                 toast.textContent = '✅ Thêm vào giỏ hàng thành công';
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 3000);
 
-                // update số lượng giỏ hàng
                 const cartSpan = document.querySelector('.btn-cart .cart-count');
-                if(cartSpan){
+                if (cartSpan) {
                     cartSpan.textContent = data.cartCount;
                 } else {
                     const span = document.createElement('span');
@@ -82,8 +129,6 @@ document.querySelectorAll('.add-to-cart-form').forEach(form => {
         }
     });
 });
-
 </script>
-
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
