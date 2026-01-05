@@ -1,5 +1,17 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<style>
+/* Xóa nút tăng giảm mặc định trên Chrome, Safari, Edge và Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
+/* Xóa nút tăng giảm mặc định trên Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+</style>
 <div class="container mt-4">
     <h2>Giỏ hàng của bạn</h2>
 
@@ -50,7 +62,7 @@
                             <td>
                                 <div class="input-group" style="width:120px;">
                                     <button type="button" class="btn btn-outline-secondary btn-decrease" <?= $item['order_status'] !== 'PENDING' ? 'disabled' : '' ?>>-</button>
-                                    <input type="text" class="form-control text-center quantity-input" value="<?= $item['quantity'] ?>" readonly>
+                                    <input type="number" class="form-control text-center quantity-input" value="<?= $item['quantity'] ?>" min="1" max="50" <?= $item['order_status'] !== 'PENDING' ? 'readonly' : '' ?>>
                                     <button type="button" class="btn btn-outline-secondary btn-increase" <?= $item['order_status'] !== 'PENDING' ? 'disabled' : '' ?>>+</button>
                                 </div>
                             </td>
@@ -178,49 +190,101 @@
         });
 
         // Nút tăng giảm
-        document.querySelectorAll('tr[data-order-item-id]').forEach(tr=>{
-        const decreaseBtn = tr.querySelector('.btn-decrease');
-        const increaseBtn = tr.querySelector('.btn-increase');
-        const qtyInput = tr.querySelector('.quantity-input');
-        const priceEl = tr.querySelector('.price');
-        const subtotalEl = tr.querySelector('.subtotal');
+        document.querySelectorAll('tr[data-order-item-id]').forEach(tr => {
+            const decreaseBtn = tr.querySelector('.btn-decrease');
+            const increaseBtn = tr.querySelector('.btn-increase');
+            const qtyInput = tr.querySelector('.quantity-input');
+            const priceEl = tr.querySelector('.price');
+            const subtotalEl = tr.querySelector('.subtotal');
 
-        const price = parseInt(priceEl.textContent.replace(/\D/g,''));
-        
-        if(decreaseBtn && increaseBtn){
-            // GỌI AJAX TĂNG
-            increaseBtn.addEventListener('click', ()=>{
-                fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
-                    method:'POST',
-                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                    body:`id=${tr.dataset.orderItemId}&type=inc`
-                })
-                .then(r=>r.json())
-                .then(res=>{
-                    if(res.success){
-                        qtyInput.value = res.quantity;
-                        subtotalEl.textContent = formatCurrency(res.quantity * price);
-                        calculateTotal();
+            const price = parseInt(priceEl.textContent.replace(/\D/g, ''));
+
+            if (decreaseBtn && increaseBtn) {
+                // 1. Xử lý nút Tăng (+)
+                increaseBtn.addEventListener('click', () => {
+                    let currentVal = parseInt(qtyInput.value);
+                    if (currentVal >= 50) {
+                        alert("Số lượng tối đa là 50 sản phẩm");
+                        return;
                     }
+                    fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `id=${tr.dataset.orderItemId}&type=inc`
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            qtyInput.value = res.quantity;
+                            subtotalEl.textContent = formatCurrency(res.quantity * price);
+                            calculateTotal();
+                        }
+                    });
                 });
-            });
-            decreaseBtn.addEventListener('click', ()=>{
-                fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
-                    method:'POST',
-                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                    body:`id=${tr.dataset.orderItemId}&type=dec`
-                })
-                .then(r=>r.json())
-                .then(res=>{
-                    if(res.success){
-                        qtyInput.value = res.quantity;
-                        subtotalEl.textContent = formatCurrency(res.quantity * price);
-                        calculateTotal();
+
+                // 2. Xử lý nút Giảm (-)
+                // 2. Xử lý nút Giảm (-)
+                decreaseBtn.addEventListener('click', () => {
+                    let currentVal = parseInt(qtyInput.value);
+    
+                    // Bắt lỗi nếu bấm giảm khi đang là 1
+                    if (currentVal <= 1) {
+                        alert("Số lượng tối thiểu là 1 sản phẩm. Nếu không muốn mua, vui lòng nhấn nút xóa!");
+                        return;
                     }
+
+                    fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `id=${tr.dataset.orderItemId}&type=dec`
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            qtyInput.value = res.quantity;
+                            subtotalEl.textContent = formatCurrency(res.quantity * price);
+                            calculateTotal();
+                        }
+                    });
                 });
+
+                // 3. Xử lý khi NHẬP TRỰC TIẾP bằng bàn phím
+                qtyInput.addEventListener('change', () => {
+                    let val = parseInt(qtyInput.value);
+
+                    // Kiểm tra nếu vượt quá 50
+                    if (val > 50) {
+                        alert("Số lượng đã vượt quá giới hạn (tối đa 50). Xin quý khách vui lòng nhập lại!");
+                        qtyInput.value = 1; // Reset về 1
+                        qtyInput.focus();   // Đưa con trỏ chuột vào lại ô nhập
+                        return;             // Thoát ra, không gửi AJAX lên server
+                    }
+
+                    // Kiểm tra tính hợp lệ khác
+                    if (isNaN(val) || val < 1) {
+                        qtyInput.value = 0;
+                        return;
+                    }
+
+                    // Nếu hợp lệ (1-50) thì mới gửi AJAX
+                    fetch('/GocCaPhe/public/index.php?url=cart/updateQuantity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `id=${tr.dataset.orderItemId}&type=set&quantity=${val}`
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            subtotalEl.textContent = formatCurrency(val * price);
+                            calculateTotal();
+                        } else {
+                            alert(res.message);
+                            qtyInput.value = 0; // Reset về 0 nếu server cũng báo lỗi
+                        }
+                    });
                 });
-        }
-    });
+            }
+        });
         // Checkout button
         document.getElementById('checkout-btn').addEventListener('click', ()=>{
             const selectedIds = [...document.querySelectorAll('.item-checkbox:checked')].map(cb=>cb.value);
