@@ -1,7 +1,21 @@
 <?php
+require_once __DIR__ . '/../models/Order.php';
+
 
 class OrderController
 {
+public function exportExcel()
+{
+    // session_start() CHỈ GỌI 1 LẦN Ở index.php
+    $exportName = $_SESSION['user']['name'] ?? 'Không xác định';
+    $exportRole = $_SESSION['user']['role'] ?? '';
+
+    $pdo = Database::connect();
+    $order = new Order($pdo);
+    $order->exportAllOrdersExcel($exportName, $exportRole);
+}
+
+
     public function index()
     {
         $pdo = Database::connect();

@@ -3,6 +3,16 @@
 <div class="container mt-4 mb-5">
     <h3 class="text-primary"><i class="fas fa-file-invoice-dollar"></i> Quản lý đơn hàng</h3>
 
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div></div>
+
+    <a href="?url=admin/orders/export-excel"
+       class="btn btn-success"
+       title="Xuất Excel đơn hàng đã duyệt">
+        <i class="fas fa-file-excel"></i> Xuất Excel
+    </a>
+</div>
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <table class="table table-bordered table-hover align-middle mb-0">

@@ -274,6 +274,12 @@ switch ($url) {
 
     /* ORDER APPROVAL - ADMIN + STAFF */
 
+    case 'admin/orders/export-excel':
+    (new OrderController())->exportExcel();
+    break;
+
+
+
     case 'admin/orders':
         requireStaffOrAdmin();
         (new OrderController)->index();
