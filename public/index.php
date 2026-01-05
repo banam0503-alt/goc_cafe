@@ -101,6 +101,21 @@ switch ($url) {
         (new AdminStaffController)->deleteSchedule(); // Xóa lịch
         break;
 
+    case 'admin/staff/edit':
+        requireRole('ADMIN');
+        (new AdminStaffController)->editSchedule(); // Hiển thị form sửa đổi người
+        break;
+
+    case 'admin/staff/update':
+        requireRole('ADMIN');
+        (new AdminStaffController)->updateSchedule(); // Xử lý lưu sau khi sửa
+        break;
+
+    case 'admin/staff/export':
+        requireRole('ADMIN');
+        (new AdminStaffController)->exportWeekly(); // Xuất file Excel
+        break;
+
     /* --- KHU VỰC CỦA NHÂN VIÊN (STAFF) --- */
     case 'staff':
         // Trang dashboard chính của nhân viên

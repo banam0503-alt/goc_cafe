@@ -53,6 +53,7 @@ class StaffModel {
 
     // --- DÀNH CHO STAFF ---
 
+
     // Lấy lịch làm việc cá nhân (từ ngày hiện tại trở đi)
     public function getMySchedule($user_id) {
         $sql = "SELECT * FROM work_schedules 
@@ -60,6 +61,51 @@ class StaffModel {
                 ORDER BY work_date ASC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['uid' => $user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // --- BỔ SUNG CHO CHỨC NĂNG EDIT ---
+
+    // Lấy thông tin chi tiết 1 ca làm việc theo ID
+    public function getShiftById($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM work_schedules WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Cập nhật nhân viên cho ca làm việc (Đổi người)
+    public function updateShiftStaff($schedule_id, $new_user_id) {
+        // Kiểm tra xem nhân viên mới đã có lịch trùng giờ ngày đó chưa (Optional logic)
+        // Ở đây mình cập nhật thẳng user_id
+        $stmt = $this->pdo->prepare("UPDATE work_schedules SET user_id = ? WHERE id = ?");
+        return $stmt->execute([$new_user_id, $schedule_id]);
+    }
+
+    public function updateShiftDetails($id, $user_id, $shift_name, $start_time, $end_time) {
+        $sql = "UPDATE work_schedules 
+                SET user_id = :uid, shift_name = :sname, start_time = :start, end_time = :end 
+                WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'uid'   => $user_id,
+            'sname' => $shift_name,
+            'start' => $start_time,
+            'end'   => $end_time,
+            'id'    => $id
+        ]);
+    }
+
+    // --- BỔ SUNG CHO CHỨC NĂNG EXPORT --- 
+
+    // Lấy lịch làm việc trong khoảng thời gian (Từ ngày A đến ngày B)
+    public function getWeeklyRoster($startDate, $endDate) {
+        $sql = "SELECT s.work_date, s.shift_name, s.start_time, s.end_time, u.name as staff_name 
+                FROM work_schedules s
+                JOIN users u ON s.user_id = u.id
+                WHERE s.work_date BETWEEN :start AND :end
+                ORDER BY s.work_date ASC, s.start_time ASC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['start' => $startDate, 'end' => $endDate]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
